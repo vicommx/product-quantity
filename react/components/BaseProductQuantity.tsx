@@ -6,6 +6,7 @@ import { ProductContext } from 'vtex.product-context'
 
 import DropdownProductQuantity from './DropdownProductQuantity'
 import StepperProductQuantity from './StepperProductQuantity'
+import { getDefaultSeller } from '../helpers/getDefaultSeller'
 
 export type NumericSize = 'small' | 'regular' | 'large'
 export type SelectorType = 'stepper' | 'dropdown'
@@ -52,9 +53,9 @@ const BaseProductQuantity: StorefrontFunctionComponent<BaseProps> = ({
     [dispatch]
   )
 
-  const availableQuantity =
-    selectedItem?.sellers?.find(({ sellerDefault }) => sellerDefault === true)
-      ?.commertialOffer?.AvailableQuantity ?? 0
+  const seller = getDefaultSeller(selectedItem?.sellers)
+
+  const availableQuantity = seller?.commertialOffer?.AvailableQuantity ?? 0
 
   if (availableQuantity < 1 || !selectedItem) {
     return null
