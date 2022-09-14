@@ -1,5 +1,5 @@
 {
-  "vendor": "vtex",
+  "vendor": "vicomstudio",
   "name": "product-quantity",
   "version": "1.8.1",
   "title": "Product Quantity",
@@ -20,6 +20,14 @@
     "vtex.product-summary-context": "0.x",
     "vtex.css-handles": "0.x",
     "vtex.device-detector": "0.x"
+  },
+  "billingOptions": {
+    "type": "free",
+    "availableCountries": ["*"],
+    "termsURL": "https://compliance.vtex.com/gdpr/policies/vtex-privacy-policy",
+    "support": {
+      "url": "https://vicom.mx/contacto"
+    }
   },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
