@@ -1,7 +1,7 @@
 {
   "vendor": "vicomstudio",
   "name": "product-quantity",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "title": "Product Quantity",
   "description": "Product quantity",
   "builders": {
