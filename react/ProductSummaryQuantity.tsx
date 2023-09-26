@@ -17,6 +17,8 @@ const ProductSummaryQuantity: StorefrontFunctionComponent<BaseProps> = props => 
     selectorType,
     showUnit,
     quantitySelectorStep,
+    limitMaxQuantityFromMD,
+    entityToGetLimitedProducts
   } = props
   const handles = useCssHandles(CSS_HANDLES)
   const { selectedItem, selectedQuantity } = useProduct()
@@ -42,7 +44,9 @@ const ProductSummaryQuantity: StorefrontFunctionComponent<BaseProps> = props => 
         selectedQuantity={selectedQuantity}
         selectorType={selectorType}
         warningQuantityThreshold={warningQuantityThreshold}
-        quantitySelectorStep={quantitySelectorStep}
+        quantitySelectorStep={quantitySelectorStep}        
+        limitMaxQuantityFromMD={limitMaxQuantityFromMD}
+        entityToGetLimitedProducts = {entityToGetLimitedProducts}
       />
     </div>
   )

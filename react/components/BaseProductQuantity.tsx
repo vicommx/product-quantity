@@ -1,12 +1,14 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useCssHandles } from 'vtex.css-handles'
 import { DispatchFunction } from 'vtex.product-context/ProductDispatchContext'
 import { ProductContext } from 'vtex.product-context'
+import { useOrderForm } from 'vtex.order-manager/OrderForm'
 
 import DropdownProductQuantity from './DropdownProductQuantity'
 import StepperProductQuantity from './StepperProductQuantity'
 import { getDefaultSeller } from '../helpers/getDefaultSeller'
+import { getLimitedProducts } from '../helpers/getLimitedProducts'
 
 export type NumericSize = 'small' | 'regular' | 'large'
 export type SelectorType = 'stepper' | 'dropdown'
@@ -22,6 +24,8 @@ export interface BaseProps {
   warningQuantityThreshold: number
   showUnit: boolean
   quantitySelectorStep?: QuantitySelectorStepType
+  limitMaxQuantityFromMD: Boolean
+  entityToGetLimitedProducts: string
 }
 
 const CSS_HANDLES = [
@@ -44,22 +48,51 @@ const BaseProductQuantity: StorefrontFunctionComponent<BaseProps> = ({
   selectorType = 'stepper',
   showUnit = true,
   quantitySelectorStep = 'unitMultiplier',
+  limitMaxQuantityFromMD = false,
+  entityToGetLimitedProducts = 'LP'  
 }) => {
-  const handles = useCssHandles(CSS_HANDLES)
+  const handles = useCssHandles(CSS_HANDLES)  
   const onChange = useCallback(
     (e: OnChangeCallback) => {
       dispatch({ type: 'SET_QUANTITY', args: { quantity: e.value } })
     },
     [dispatch]
   )
+  const { orderForm } = useOrderForm()
+  const productInOrder = orderForm.items.find((item:any) => item.id === selectedItem?.itemId)
 
   const seller = getDefaultSeller(selectedItem?.sellers)
-
   const availableQuantity = seller?.commertialOffer?.AvailableQuantity ?? 0
+
+  const [ maxQuantity, setMaxQuantity ] = useState(availableQuantity)
 
   if (availableQuantity < 1 || !selectedItem) {
     return null
   }
+
+  useEffect(() => {
+    if (limitMaxQuantityFromMD){
+      getLimitedProducts(entityToGetLimitedProducts, selectedItem.itemId)
+      .then((data) => {
+        if(!data?.length || !data[0]?.cantidad){
+          setMaxQuantity(availableQuantity)
+          return
+        }
+
+        const maxQtyFromMD = parseInt(data[0]?.cantidad)
+        const qtyToCompare = availableQuantity > maxQtyFromMD ? maxQtyFromMD : availableQuantity
+        if (productInOrder){          
+          const newQty = qtyToCompare - productInOrder.quantity > 0 ? qtyToCompare - productInOrder.quantity : 1
+          setMaxQuantity(newQty)
+        } else {
+          setMaxQuantity(qtyToCompare)
+        }
+      })
+    } else{
+      setMaxQuantity(availableQuantity)
+    }
+  }, [orderForm, selectedItem])
+  
 
   const showAvailable = availableQuantity <= warningQuantityThreshold
   const unitMultiplier =
@@ -81,7 +114,7 @@ const BaseProductQuantity: StorefrontFunctionComponent<BaseProps> = ({
           unitMultiplier={unitMultiplier}
           measurementUnit={selectedItem.measurementUnit}
           selectedQuantity={selectedQuantity}
-          availableQuantity={availableQuantity}
+          availableQuantity={maxQuantity}
           onChange={onChange}
         />
       )}
@@ -89,7 +122,7 @@ const BaseProductQuantity: StorefrontFunctionComponent<BaseProps> = ({
         <DropdownProductQuantity
           itemId={selectedItem.itemId}
           selectedQuantity={selectedQuantity}
-          availableQuantity={availableQuantity}
+          availableQuantity={maxQuantity}
           onChange={onChange}
           size={size}
         />

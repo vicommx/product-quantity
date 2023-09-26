@@ -14,6 +14,8 @@ const ProductQuantity: StorefrontFunctionComponent<BaseProps> = props => {
     selectorType,
     showUnit,
     quantitySelectorStep,
+    limitMaxQuantityFromMD,
+    entityToGetLimitedProducts
   } = props
   const { selectedItem, selectedQuantity } = useProduct()
   const dispatch = useProductDispatch()
@@ -29,6 +31,8 @@ const ProductQuantity: StorefrontFunctionComponent<BaseProps> = props => {
       selectorType={selectorType}
       warningQuantityThreshold={warningQuantityThreshold}
       quantitySelectorStep={quantitySelectorStep}
+      limitMaxQuantityFromMD={limitMaxQuantityFromMD}
+      entityToGetLimitedProducts = {entityToGetLimitedProducts}
     />
   )
 }
