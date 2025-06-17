@@ -1,5 +1,4 @@
 import React from 'react'
-import { useRuntime } from 'vtex.render-runtime'
 import useProduct from 'vtex.product-context/useProduct'
 import { useProductDispatch } from 'vtex.product-context/ProductDispatchContext'
 
@@ -18,12 +17,9 @@ const ProductQuantity: StorefrontFunctionComponent<BaseProps> = props => {
     limitMaxQuantityFromMD,
     entityToGetLimitedProducts
   } = props
-  const { account } = useRuntime()
   const { selectedItem, selectedQuantity } = useProduct()
   const dispatch = useProductDispatch()
 
-  if (account === 'bodegasalianza' ) return null
-  
   return (
     <BaseProductQuantity
       showUnit={showUnit}

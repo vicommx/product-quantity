@@ -1,5 +1,4 @@
 import React from 'react'
-import { useRuntime } from 'vtex.render-runtime'
 import { useCssHandles } from 'vtex.css-handles'
 import useProduct from 'vtex.product-context/useProduct'
 import { useProductDispatch } from 'vtex.product-context/ProductDispatchContext'
@@ -21,7 +20,6 @@ const ProductSummaryQuantity: StorefrontFunctionComponent<BaseProps> = props => 
     limitMaxQuantityFromMD,
     entityToGetLimitedProducts
   } = props
-  const { account } = useRuntime()
   const handles = useCssHandles(CSS_HANDLES)
   const { selectedItem, selectedQuantity } = useProduct()
   const dispatch = useProductDispatch()
@@ -32,8 +30,6 @@ const ProductSummaryQuantity: StorefrontFunctionComponent<BaseProps> = props => 
     e.stopPropagation()
   }
 
-  if (account === 'bodegasalianza') return null
-  
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
