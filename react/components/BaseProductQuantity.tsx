@@ -66,11 +66,9 @@ const BaseProductQuantity: StorefrontFunctionComponent<BaseProps> = ({
 
   const [ maxQuantity, setMaxQuantity ] = useState(availableQuantity)
 
-  if (availableQuantity < 1 || !selectedItem) {
-    return null
-  }
-
   useEffect(() => {
+    if (!selectedItem) return
+    
     if (limitMaxQuantityFromMD){
       getLimitedProducts(entityToGetLimitedProducts, selectedItem.itemId)
       .then((data) => {
@@ -92,7 +90,10 @@ const BaseProductQuantity: StorefrontFunctionComponent<BaseProps> = ({
       setMaxQuantity(availableQuantity)
     }
   }, [orderForm, selectedItem])
-  
+
+  if (availableQuantity < 1 || !selectedItem) {
+    return null
+  }
 
   const showAvailable = availableQuantity <= warningQuantityThreshold
   const unitMultiplier =
